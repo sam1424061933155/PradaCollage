@@ -175,7 +175,7 @@ public class MainActivity extends BaseActivity implements OnLabelListener, OnPho
 	}
 
 	private void clearImages() {
-		photoPanel.removeAllViews();
+		allViews.removeAllViews();
 	}
 
 	@SuppressLint("NewApi")
