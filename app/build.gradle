@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "lab.prada.collage"
-        minSdkVersion 9
+        minSdkVersion 21
         targetSdkVersion 23
 
         testApplicationId "lab.prada.collage.test"
