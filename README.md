@@ -4,7 +4,8 @@ Task
 This project is for the test of bring to front and push to bottom. 
 It will be implement in two ways
  1. Method in View (BringToFront())
- 2. ViewCompat.animate
+ 2. ViewCompat.animate  
+
 Add animation<br>
  1. viewCompat.animate
 
