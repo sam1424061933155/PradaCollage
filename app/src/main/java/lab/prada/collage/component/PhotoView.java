@@ -2,6 +2,7 @@ package lab.prada.collage.component;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v4.view.ViewPropertyAnimatorListener;
@@ -11,13 +12,19 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.thuytrinh.multitouchlistener.MultiTouchListener;
 
 import lab.prada.collage.MainActivity;
+import lab.prada.collage.R;
 
 public class PhotoView extends ImageView implements BaseComponent {
 
@@ -34,9 +41,7 @@ public class PhotoView extends ImageView implements BaseComponent {
 	private OnPhotoListener listener;
 	//test
 	private String TAG="Animation Test";
-	public static float initalZ=0;
-	public static float bottomZ=0;
-	private ViewPropertyAnimatorCompat animator;
+
 
 
 	public PhotoView(Context context) {
@@ -62,8 +67,8 @@ public class PhotoView extends ImageView implements BaseComponent {
 		this.listener = listener;
 		this.setOnTouchListener(new MultiTouchListener(
 				new GestureListener()));
-		getView().setTranslationZ(initalZ);
-		initalZ++;
+		getView().setBackgroundResource(R.drawable.outline);
+
 	}
 
 	private class GestureListener extends
@@ -82,37 +87,77 @@ public class PhotoView extends ImageView implements BaseComponent {
 		}
 		@Override
 		public boolean onSingleTapUp(MotionEvent e) {
+			// Up motion completing a single tap occurred.
 			//getView().bringToFront();
 			Log.i(TAG, "Single Tap Up" );
+
+			final float x = getScaleX();
+			final float y = getScaleY();
+
 			ViewCompat.animate(getView())
-					.translationZ(initalZ)
-					.setDuration(0)
+					.scaleX(x+0.1f)
+					.scaleY(y+0.1f)
+					.setDuration(200)
+					.withEndAction(new Runnable() {
+						@Override
+						public void run() {
+							ViewCompat.setScaleX(getView(),x);
+							ViewCompat.setScaleY(getView(),y);
+							getView().bringToFront();
+
+						}
+					})
 					.start();
-			initalZ++;
+
+
 			return true;
 		}
 
 		@Override
 		public void onLongPress(MotionEvent e) {
-			//pushToBottom();
+			// Touch has been long enough to indicate a long press.
+			// Does not indicate motion is complete yet (no up event necessarily)
 			Log.i(TAG, "Long Press" );
+			final float x = getScaleX();
+			final float y = getScaleY();
+
+
 			ViewCompat.animate(getView())
-					.translationZ(bottomZ)
-					.setDuration(0)
-					.start();
-			bottomZ--;
+						.alpha(0.5f)
+						.setDuration(300)
+						.withEndAction(new Runnable() {
+							@Override
+							public void run() {
+								//ViewCompat.setAlpha(getView(),1);
+								ViewCompat.animate(getView())
+										.alpha(1f)
+										.setDuration(300)
+										.start();
+								ViewCompat.setScaleX(getView(),x);
+								ViewCompat.setScaleY(getView(),y);
+								MainActivity.photoPanel.removeView(getView());
+								MainActivity.photoPanel.addView(getView(),0);
 
-
+							}
+						})
+						.start();
 		}
 	}
 
 
-	public  void pushToBottom(){
-		int index = MainActivity.allViews.indexOfChild(getView());
-		for(int i = 0; i<index; i++) {
-			MainActivity.allViews.bringChildToFront(MainActivity.allViews.getChildAt(i));
+
+
+	/*public boolean Distance(View view){
+
+		double x_delta =Math.pow(ViewCompat.getX(view)-ViewCompat.getX(getView()),2);
+		double y_delta =Math.pow(ViewCompat.getY(view)-ViewCompat.getY(getView()),2);
+		double dis = Math.sqrt(x_delta+y_delta);
+		Log.i(TAG, "dis = " +dis );
+		if(dis < 500){
+			return true;
 		}
-	}
+		return false;
+	}*/
 
 
 	@Override
