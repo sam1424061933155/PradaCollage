@@ -46,9 +46,9 @@ public class MainActivity extends BaseActivity implements OnLabelListener, OnPho
 	private static final int MODIFY_PHOTO = 3;
 
 	private ProgressDialog progressDialog;
-	public static ViewGroup allViews;
+	private ViewGroup allViews;
 	private ViewGroup textPanel;
-	private  ViewGroup photoPanel;
+	public static  ViewGroup photoPanel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -115,14 +115,14 @@ public class MainActivity extends BaseActivity implements OnLabelListener, OnPho
 							ViewCompat.setScaleY(iv, scale);
 							iv.setImageBitmap(bitmap);
 							iv.setXY(transform.centerX, transform.centerY);
-							//photoPanel.addView(iv);
-							allViews.addView(iv);
+							photoPanel.addView(iv);
+							//allViews.addView(iv);
 							return iv;
 						}
 					}, Task.UI_THREAD_EXECUTOR);
 				}
-				//photoPanel.invalidate();
-				allViews.invalidate();
+				photoPanel.invalidate();
+				//allViews.invalidate();
 
 				break;
 			case MODIFY_PHOTO:
@@ -175,7 +175,7 @@ public class MainActivity extends BaseActivity implements OnLabelListener, OnPho
 	}
 
 	private void clearImages() {
-		allViews.removeAllViews();
+		photoPanel.removeAllViews();
 	}
 
 	@SuppressLint("NewApi")
@@ -184,8 +184,8 @@ public class MainActivity extends BaseActivity implements OnLabelListener, OnPho
 		tv.setListener(this);
 		tv.setXY(textPanel.getWidth() / 2, textPanel.getHeight() / 2);
 		tv.setText(text, color, hasStroke);
-		//textPanel.addView(tv.getView());
-		allViews.addView(tv.getView());
+		textPanel.addView(tv.getView());
+		//allViews.addView(tv.getView());
 
 	}
 
