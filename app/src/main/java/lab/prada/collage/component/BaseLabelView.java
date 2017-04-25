@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 
@@ -41,8 +42,7 @@ public abstract class BaseLabelView extends View implements BaseComponent {
 	public void setListener(OnLabelListener listener) {
 		this.listener = listener;
 		this.setOnTouchListener(new MultiTouchListener(new GestureListener()));
-		getView().setTranslationZ(PhotoView.initalZ);
-		PhotoView.initalZ++;
+
 	}
 
 	private class GestureListener extends
@@ -63,33 +63,22 @@ public abstract class BaseLabelView extends View implements BaseComponent {
 		}
 		@Override
 		public boolean onSingleTapUp(MotionEvent e) {
-			//getView().bringToFront();
+			// Up motion completing a single tap occurred.
 			Log.i(TAG, "Single Tap Up" );
-			ViewCompat.animate(getView())
-					.translationZ(PhotoView.initalZ)
-					.setDuration(0)
-					.start();
-			PhotoView.initalZ++;
+			//getView().bringToFront();
+
 
 			return true;
 		}
 
 		@Override
 		public void onLongPress(MotionEvent e) {
-			//pushToBottom();
+			// Touch has been long enough to indicate a long press.
+			// Does not indicate motion is complete yet (no up event necessarily)
 			Log.i(TAG, "Long Press" );
-			ViewCompat.animate(getView())
-					.translationZ(PhotoView.bottomZ)
-					.setDuration(0)
-					.start();
-			PhotoView.bottomZ--;
+			//pushToBottom();
+
 		}
 	}
-	
-	public  void pushToBottom(){
-		int index = MainActivity.allViews.indexOfChild(getView());
-		for(int i = 0; i<index; i++) {
-			MainActivity.allViews.bringChildToFront(MainActivity.allViews.getChildAt(i));
-		}
-	}
+
 }
